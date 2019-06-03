@@ -39,15 +39,7 @@ class MyURLProtocol: URLProtocol, URLSessionDataDelegate {
         guard let newRequest: NSMutableURLRequest = (request as NSURLRequest).mutableCopy() as? NSMutableURLRequest else { return }
         URLProtocol.setProperty(true, forKey: MyURLProtocol.myURLProtocolHandledKey, in: newRequest)
         
-        sessionTask = session?.dataTask(with: newRequest as URLRequest) { data, response, error in
-            if let err = error {
-                self.client?.urlProtocol(self, didFailWithError: err)
-            } else {
-                self.client?.urlProtocol(self, didReceive: response!, cacheStoragePolicy: .allowed)
-                self.client?.urlProtocol(self, didLoad: data!)
-                self.client?.urlProtocolDidFinishLoading(self)
-            }
-        }
+        sessionTask = session?.dataTask(with: newRequest as URLRequest)
         
         sessionTask?.resume()
     }
@@ -64,9 +56,14 @@ class MyURLProtocol: URLProtocol, URLSessionDataDelegate {
     
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
         client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+        completionHandler(.allow)
     }
     
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        if let error = error {
+            client?.urlProtocol(self, didFailWithError: error)
+            return
+        }
         client?.urlProtocolDidFinishLoading(self)
     }
     
