@@ -10,7 +10,7 @@ import UIKit
 
 var requestCount: Int = 0
 
-class MyURLProtocol: URLProtocol {
+class MyURLProtocol: URLProtocol, NSURLConnectionDataDelegate {
     
     private static let myURLProtocolHandledKey: String = "MyURLProtocolHandledKey"
     
@@ -45,6 +45,22 @@ class MyURLProtocol: URLProtocol {
             self.connection.cancel()
         }
         self.connection = nil
+    }
+    
+    func connection(_ connection: NSURLConnection, didReceive data: Data) {
+        self.client!.urlProtocol(self, didLoad: data)
+    }
+    
+    func connection(_ connection: NSURLConnection, didReceive response: URLResponse) {
+        self.client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+    }
+    
+    func connectionDidFinishLoading(_ connection: NSURLConnection) {
+        self.client!.urlProtocolDidFinishLoading(self)
+    }
+    
+    func connection(_ connection: NSURLConnection, didFailWithError error: Error) {
+        client?.urlProtocol(self, didFailWithError: error)
     }
     
 }
