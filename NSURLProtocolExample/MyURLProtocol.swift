@@ -10,11 +10,12 @@ import UIKit
 
 var requestCount: Int = 0
 
-class MyURLProtocol: URLProtocol, NSURLConnectionDataDelegate {
+class MyURLProtocol: URLProtocol, URLSessionDataDelegate {
     
     private static let myURLProtocolHandledKey: String = "MyURLProtocolHandledKey"
     
-    var connection: NSURLConnection!
+    private lazy var session: URLSession? = URLSession(configuration: .default, delegate: self, delegateQueue: URLSession.shared.delegateQueue)
+    private var sessionTask: URLSessionTask?
     
     override class func canInit(with request: URLRequest) -> Bool {
         print("Request #\(requestCount): URL = \(String(describing: request.url?.absoluteString))")
@@ -37,30 +38,36 @@ class MyURLProtocol: URLProtocol, NSURLConnectionDataDelegate {
     override func startLoading() {
         guard let newRequest: NSMutableURLRequest = (request as NSURLRequest).mutableCopy() as? NSMutableURLRequest else { return }
         URLProtocol.setProperty(true, forKey: MyURLProtocol.myURLProtocolHandledKey, in: newRequest)
-        self.connection = NSURLConnection(request: newRequest as URLRequest, delegate: self)
+        
+        sessionTask = session?.dataTask(with: newRequest as URLRequest) { data, response, error in
+            if let err = error {
+                self.client?.urlProtocol(self, didFailWithError: err)
+            } else {
+                self.client?.urlProtocol(self, didReceive: response!, cacheStoragePolicy: .allowed)
+                self.client?.urlProtocol(self, didLoad: data!)
+                self.client?.urlProtocolDidFinishLoading(self)
+            }
+        }
+        
+        sessionTask?.resume()
     }
     
     override func stopLoading() {
-        if self.connection != nil {
-            self.connection.cancel()
-        }
-        self.connection = nil
+        self.sessionTask?.cancel()
+        self.sessionTask = nil
+        self.session = nil
     }
     
-    func connection(_ connection: NSURLConnection, didReceive data: Data) {
-        self.client!.urlProtocol(self, didLoad: data)
+    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
+        client?.urlProtocol(self, didLoad: data)
     }
     
-    func connection(_ connection: NSURLConnection, didReceive response: URLResponse) {
-        self.client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
+        client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
     }
     
-    func connectionDidFinishLoading(_ connection: NSURLConnection) {
-        self.client!.urlProtocolDidFinishLoading(self)
-    }
-    
-    func connection(_ connection: NSURLConnection, didFailWithError error: Error) {
-        client?.urlProtocol(self, didFailWithError: error)
+    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        client?.urlProtocolDidFinishLoading(self)
     }
     
 }
