@@ -12,11 +12,17 @@ var requestCount: Int = 0
 
 class MyURLProtocol: URLProtocol {
     
+    private static let myURLProtocolHandledKey: String = "MyURLProtocolHandledKey"
+    
     var connection: NSURLConnection!
     
     override class func canInit(with request: URLRequest) -> Bool {
         print("Request #\(requestCount): URL = \(String(describing: request.url?.absoluteString))")
         requestCount += 1
+        
+        if URLProtocol.property(forKey: myURLProtocolHandledKey, in: request) != nil {
+            return false
+        }
         return true
     }
     
@@ -29,7 +35,9 @@ class MyURLProtocol: URLProtocol {
     }
     
     override func startLoading() {
-        self.connection = NSURLConnection(request: self.request, delegate: self)
+        guard let newRequest: NSMutableURLRequest = (request as NSURLRequest).mutableCopy() as? NSMutableURLRequest else { return }
+        URLProtocol.setProperty(true, forKey: MyURLProtocol.myURLProtocolHandledKey, in: newRequest)
+        self.connection = NSURLConnection(request: newRequest as URLRequest, delegate: self)
     }
     
     override func stopLoading() {
