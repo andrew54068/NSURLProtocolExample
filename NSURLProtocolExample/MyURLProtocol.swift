@@ -12,18 +12,18 @@ var requestCount: Int = 0
 
 class MyURLProtocol: URLProtocol, URLSessionDataDelegate {
     
-    private static let myURLProtocolHandledKey: String = "MyURLProtocolHandledKey"
+    static let myURLProtocolHandledKey: String = "MyURLProtocolHandledKey"
     
     private lazy var session: URLSession? = URLSession(configuration: .default, delegate: self, delegateQueue: URLSession.shared.delegateQueue)
     private var sessionTask: URLSessionTask?
     
     override class func canInit(with request: URLRequest) -> Bool {
-        print("Request #\(requestCount): URL = \(String(describing: request.url?.absoluteString))")
-        requestCount += 1
-        
         if URLProtocol.property(forKey: myURLProtocolHandledKey, in: request) != nil {
             return false
         }
+        print("Request #\(requestCount): URL = \(String(describing: request.url?.absoluteString))")
+        requestCount += 1
+        
         return true
     }
     
