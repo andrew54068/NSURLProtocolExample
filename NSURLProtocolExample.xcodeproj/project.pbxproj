@@ -13,6 +13,7 @@
 		87C15641196ED7F9001ABCAD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 87C1563F196ED7F9001ABCAD /* Main.storyboard */; };
 		87C15643196ED7F9001ABCAD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 87C15642196ED7F9001ABCAD /* Images.xcassets */; };
 		87C1564F196ED7F9001ABCAD /* NSURLProtocolExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87C1564E196ED7F9001ABCAD /* NSURLProtocolExampleTests.swift */; };
+		C101B07322A4FB510066CF81 /* MyURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C101B07222A4FB510066CF81 /* MyURLProtocol.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +37,7 @@
 		87C15648196ED7F9001ABCAD /* NSURLProtocolExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NSURLProtocolExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		87C1564D196ED7F9001ABCAD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		87C1564E196ED7F9001ABCAD /* NSURLProtocolExampleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSURLProtocolExampleTests.swift; sourceTree = "<group>"; };
+		C101B07222A4FB510066CF81 /* MyURLProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyURLProtocol.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +81,7 @@
 			children = (
 				87C15638196ED7F9001ABCAD /* AppDelegate.swift */,
 				87C1563D196ED7F9001ABCAD /* BrowserViewController.swift */,
+				C101B07222A4FB510066CF81 /* MyURLProtocol.swift */,
 				87C1563F196ED7F9001ABCAD /* Main.storyboard */,
 				87C15642196ED7F9001ABCAD /* Images.xcassets */,
 				87C1563A196ED7F9001ABCAD /* NSURLProtocolExample.xcdatamodeld */,
@@ -213,6 +216,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				87C1563E196ED7F9001ABCAD /* BrowserViewController.swift in Sources */,
+				C101B07322A4FB510066CF81 /* MyURLProtocol.swift in Sources */,
 				87C15639196ED7F9001ABCAD /* AppDelegate.swift in Sources */,
 				87C1563C196ED7F9001ABCAD /* NSURLProtocolExample.xcdatamodeld in Sources */,
 			);
