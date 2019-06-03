@@ -21,7 +21,7 @@ class MyURLProtocol: URLProtocol, URLSessionDataDelegate {
     private var sessionTask: URLSessionTask?
     
     var mutableData: Data?
-    var response: URLResponse!
+    var response: URLResponse?
     
     override class func canInit(with request: URLRequest) -> Bool {
         if URLProtocol.property(forKey: myURLProtocolHandledKey, in: request) != nil {
@@ -80,8 +80,8 @@ class MyURLProtocol: URLProtocol, URLSessionDataDelegate {
             cachedResponse.setValue(self.mutableData, forKey: "data")
             cachedResponse.setValue(self.request.url?.absoluteString, forKey: "url")
             cachedResponse.setValue(NSDate(), forKey: "timestamp")
-            cachedResponse.setValue(self.response.mimeType, forKey: "mimeType")
-            cachedResponse.setValue(self.response.textEncodingName, forKey: "encoding")
+            cachedResponse.setValue(self.response?.mimeType, forKey: "mimeType")
+            cachedResponse.setValue(self.response?.textEncodingName, forKey: "encoding")
             
             do {
                 try context.save()
