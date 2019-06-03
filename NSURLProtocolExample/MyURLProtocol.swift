@@ -42,12 +42,12 @@ class MyURLProtocol: URLProtocol, URLSessionDataDelegate {
         sessionTask = session?.dataTask(with: newRequest as URLRequest)
         
         sessionTask?.resume()
+        session?.finishTasksAndInvalidate()
     }
     
     override func stopLoading() {
         self.sessionTask?.cancel()
         self.sessionTask = nil
-        self.session = nil
     }
     
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
