@@ -50,6 +50,7 @@ class MyURLProtocol: URLProtocol, URLSessionDataDelegate {
         self.sessionTask = nil
     }
     
+    // MARK: URLSessionDataDelegate
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         client?.urlProtocol(self, didLoad: data)
     }
